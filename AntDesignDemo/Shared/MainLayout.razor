@@ -1,15 +1,139 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+<Layout Style="min-height: 100vh;">
+    <Sider Collapsible NoTrigger Collapsed="collapsed" Style="padding-bottom: 0px;">
+        <Menu DefaultSelectedKeys=@(new[]{"1"})
+              DefaultOpenKeys=@(new[]{"sub1"})
+              Mode=MenuMode.Inline
+              InlineCollapsed=collapsed
+              Style="height: 100%;">
+            <MenuItem Key="1" RouterLink="/page1">
+                <Icon Type="pie-chart" Theme="outline"></Icon>
+                <span>Option 1</span>
+            </MenuItem>
+            <MenuItem Key="2" RouterLink="/page2">
+                <Icon Type="desktop" Theme="outline"></Icon>
+                <span>Option 2</span>
+            </MenuItem>
+            <MenuItem Key="3" RouterLink="/page3">
+                <Icon Type="container" Theme="outline"></Icon>
+                <span>Option 3</span>
+            </MenuItem>
+            <SubMenu Key="sub1" Title=sub1Title>
+                <MenuItem Key="5" RouterLink="/page5">Option 5</MenuItem>
+                <MenuItem Key="6" RouterLink="/page6">Option 6</MenuItem>
+                <MenuItem Key="7" RouterLink="/page7">Option 7</MenuItem>
+                <MenuItem Key="8" RouterLink="/page8">Option 8</MenuItem>
+            </SubMenu>
+            <SubMenu Key="sub2" Title=sub2Title>
+                <MenuItem Key="9" RouterLink="/page9">Option 9</MenuItem>
+                <MenuItem Key="10" RouterLink="/page10">Option 10</MenuItem>
+                <SubMenu Key="sub3" Title=@("Submenu")>
+                    <MenuItem Key="11" RouterLink="/page11">Option 11</MenuItem>
+                    <MenuItem Key="12" RouterLink="/page12">Option 12</MenuItem>
+                </SubMenu>
+            </SubMenu>
+        </Menu>
+    </Sider>
+    <Layout Style="background: #fff;">
+        <Header Style="padding: 0;
+        box-shadow: 0 0.3px 0.9px rgba(0, 0, 0, 0.12), 0 1.6px 3.6px rgba(0, 0, 0, 0.12);
+        background: #fff;">
+            @if (collapsed)
+            {
+                <Icon Type="menu-unfold" Theme="outline" Class="trigger" OnClick="toggle" />
+            }
+            else
+            {
+                <Icon Type="menu-fold" Theme="outline" Class="trigger" OnClick="toggle" />
+            }
+        </Header>
+        <Content Style="padding: 0 10px;">
+            <Tabs DefaultActiveKey="1">
+                @foreach (var pane in _panes)
+                {
+                    <TabPane Key="@pane.Key">
+                        <Tab>@pane.Tab</Tab>
+                        <ChildContent>@pane.ChildContent</ChildContent>
+                    </TabPane>
+                }
+                <TabPane Key="1">
+                    <Tab>用户列表</Tab>
+                    <ChildContent>Tab 1</ChildContent>
+                </TabPane>
+                <TabPane Key="2">
+                    <Tab>创建用户</Tab>
+                    <ChildContent>Tab 2</ChildContent>
+                </TabPane>
+                <TabPane Key="3">
+                    <Tab>创建角色</Tab>
+                    <ChildContent>Tab 3</ChildContent>
+                </TabPane>
+            </Tabs>
+        </Content>
+    </Layout>
+</Layout>
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-    </div>
+<style>
+    .trigger {
+        font-size: 28px;
+        line-height: 64px;
+        padding: 0 24px;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
+    .trigger:hover {
+        color: #1890ff;
+    }
+</style>
+
+@code
+{
+    RenderFragment sub1Title =
+    @<span>
+        <Icon Type="mail" Theme="outline"></Icon>
+        <span>Navigation One</span>
+    </span>;
+
+    RenderFragment sub2Title =
+    @<span>
+        <Icon Type="appstore" Theme="outline"></Icon>
+        <span>Navigation Two</span>
+    </span>;
+
+    private bool collapsed = false;
+
+    void toggle()
+    {
+        collapsed = !collapsed;
+    }
+
+    private static List<TabPane> _panes = new List<TabPane>();
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged -= NavigationManager_LocationChanged;
+        NavigationManager.LocationChanged += NavigationManager_LocationChanged;
+    }
+
+    private void NavigationManager_LocationChanged(object sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        var path = new Uri(e.Location).LocalPath;
+        AddTab(path);
+    }
+
+    private void AddTab(string path)
+    {
+        _panes.Add(new TabPane(
+            key: path,
+            tab: (b) => b.AddContent(0, $"Tab {path}"),
+            childContent: (b) => b.AddContent(0, $"Content of Tab Pane {path}")
+        ));
+
+        StateHasChanged();
+    }
+}
