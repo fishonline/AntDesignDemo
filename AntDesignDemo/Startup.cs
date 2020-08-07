@@ -31,7 +31,6 @@ namespace AntDesignDemo
             else
             {
                 app.UseExceptionHandler("/Error");
-                app.UseHsts();
             }
 
             app.UseStaticFiles();

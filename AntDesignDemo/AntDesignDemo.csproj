@@ -5,11 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\" />
+    <ProjectReference Include="..\Components\AntDesign.csproj" />
   </ItemGroup>
 
 </Project>

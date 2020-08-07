@@ -1,0 +1,56 @@
+﻿@inject NavigationManager NavigationManager
+
+<Menu Mode="MenuMode.Inline" DefaultSelectedKeys="@(new[] { "1" })" DefaultOpenKeys="@(new[] { "sub1" })" InlineCollapsed>
+    @*@foreach (var menuItem in Menus)
+    {
+        if (!menuItem.Children.Any())
+        {
+            <MenuItem Key="@menuItem.Key" OnClick="e => { NavigationManager.NavigateTo(menuItem.Link); }">
+                <Icon Type="@menuItem.Icon"></Icon>
+                <span>@menuItem.Label</span>
+            </MenuItem>
+            continue;
+        }
+    }*@
+
+    <MenuItem Key="1" RouterLink="/page1">
+        <Icon Type="pie-chart"></Icon>
+        <span>Option 1</span>
+    </MenuItem>
+    <MenuItem Key="2" RouterLink="/page2">
+        <Icon Type="desktop"></Icon>
+        <span>Option 2</span>
+    </MenuItem>
+    <MenuItem Key="3" RouterLink="/page3">
+        <Icon Type="container"></Icon>
+        <span>Option 3</span>
+    </MenuItem>
+    <SubMenu Key="sub1" Title="sub1Title">
+        <MenuItem Key="4" RouterLink="/page4">Option 4</MenuItem>
+        <MenuItem Key="5" RouterLink="/page5">Option 5</MenuItem>
+        <MenuItem Key="6" RouterLink="/page6">Option 6</MenuItem>
+        <MenuItem Key="7" RouterLink="/page7">Option 7</MenuItem>
+    </SubMenu>
+    <SubMenu Key="sub2" Title="sub2Title">
+        <MenuItem Key="8" RouterLink="/page8">Option 8</MenuItem>
+        <MenuItem Key="9" RouterLink="/page9">Option 9</MenuItem>
+        <SubMenu Key="sub3" Title="@("Submenu")">
+            <MenuItem Key="10" RouterLink="/page10">Option 10</MenuItem>
+            <MenuItem Key="11" RouterLink="/page11">Option 11</MenuItem>
+        </SubMenu>
+    </SubMenu>
+</Menu>
+
+@code {
+    RenderFragment sub1Title =
+    @<span>
+        <Icon Type="mail"></Icon>
+        <span>Navigation One</span>
+    </span>;
+
+    RenderFragment sub2Title =
+    @<span>
+        <Icon Type="appstore"></Icon>
+        <span>Navigation Two</span>
+    </span>;
+}

@@ -1,0 +1,35 @@
+﻿<Tabs DefaultActiveKey="1" Type="@TabType.EditableCard" HideAdd>
+    @foreach (var tabModel in DataSource)
+    {
+        <TabPane Key="@tabModel.Key">
+            <Tab>@tabModel.Label</Tab>
+            <ChildContent>@tabModel.Content</ChildContent>
+        </TabPane>
+    }
+    <TabPane Key="1">
+        <Tab>用户列表</Tab>
+        <ChildContent>Tab 1</ChildContent>
+    </TabPane>
+    <TabPane Key="2">
+        <Tab>创建用户</Tab>
+        <ChildContent>Tab 2</ChildContent>
+    </TabPane>
+    <TabPane Key="3">
+        <Tab>
+            <Dropdown Trigger="new TriggerType[] { TriggerType.ContextMenu }">
+                <Overlay>
+                    <Menu>
+                        <MenuItem>刷新</MenuItem>
+                        <MenuItem>关闭</MenuItem>
+                        <MenuItem>关闭其它</MenuItem>
+                        <MenuItem>全部关闭</MenuItem>
+                    </Menu>
+                </Overlay>
+                <ChildContent>
+                    <span>创建角色</span>
+                </ChildContent>
+            </Dropdown>
+        </Tab>
+        <ChildContent>Tab 3</ChildContent>
+    </TabPane>
+</Tabs>
